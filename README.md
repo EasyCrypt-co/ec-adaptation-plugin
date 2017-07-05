@@ -9,7 +9,7 @@ The Adaptation Plugin provides several functions for adaptation of RoundCube to 
 This includes partial handling of EasyCrypt message transport, adaptation of RoundCube UI to EasyCrypt,
 client-side message caching and client-side PGP/MIME support.
 
-The code is  written mainly in PHP and JavaScript and includes other open-source classes/libraries from [Select2][select2].
+The code is  written mainly in PHP and JavaScript and includes other open-source classes/libraries from [Select2](https://select2.github.io/).
 
 INSTALLATION
 ------------
@@ -28,4 +28,4 @@ Rename it to plugins/ec_adaptation/js/ec_client_cfg.js
 CONTACT
 -------
 For bug reports or feature requests please refer to the tracking system
-at [Github][githubissues] or email us at support(at)easycrypt(dot)co
+at [Github](https://github.com/EasyCrypt-co/ec-adaptation-plugin/issues) or email us at support(at)easycrypt(dot)co
