@@ -28,4 +28,4 @@ Rename it to plugins/ec_adaptation/js/ec_client_cfg.js
 CONTACT
 -------
 For bug reports or feature requests please refer to the tracking system
-at [Github][githubissues] or email us at support(at)easycrypt(dot)com
+at [Github][githubissues] or email us at support(at)easycrypt(dot)co
