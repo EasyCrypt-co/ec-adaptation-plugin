@@ -1,0 +1,462 @@
+//"use strict";
+
+function ECClientCFGObj(cfg){
+	var obj={};
+	for(var key in cfg)obj[key]=cfg[key];
+	
+	obj.cloneCfg=function(){
+		var cfg={};
+		for(var key in obj.cfg)cfg[key]=obj.cfg[key];
+		return cfg;
+	};
+	obj.backupCfg=function(){
+		obj._cfg=obj.cloneCfg();
+		return obj._cfg;
+	};
+	obj.revertCfg=function(){
+		for(var key in obj._cfg)obj.cfg[key]=obj._cfg[key];
+		return obj.cfg;
+	};
+	obj.constructor=this;
+	
+	return obj;
+}
+
+var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+function isMobileCFG(){
+	return isMobile.any();
+}
+
+var ECClientCFG = {
+	// ----------------------------------
+	// System Flags
+	// ----------------------------------
+	debug:false,//enable console log, global param
+	debugExt:false,//debug extended func~
+	debugMime:false,//debug mime fuctionalities
+	debugMimeExt:false,//debug mime fuctionalities
+	debugEncrypt:false,//debug encryption func~
+	debugDecrypt:false,//debug decryption func~
+	debugDecryptExt:false,//debug decryption func~ extended
+	offlineMode:false,//disable ajax responses, global flag
+	lockMode:false,//locks ui and some ajax, global flag
+	lockSessionStorage:false,//lock containers on lockSession
+	disableAjax:false,//ajax disabled in jquery
+	disableHTTPActions:["refresh","list","check-recent"],//forbidden http actions in case of enableHTTPFilter
+	enableHTTPFilter:false,//flag use of disableHTTPActions
+	lockOnLogout:true,//locks UI upon logout
+	loggingOut:false,//marks state for logging out
+	overrideLocks:true,//existing locks in localStorage will be overriden
+	unlocking:false,//marks state for unlocking
+	revokeTimeout:1000,//window.URL.revokeObjectURL timeout, used for downloading Blob, in ms
+	defaultTooltips:true,//use default tooltips instead of custom objects
+	enableDecryptRevert:true,//reverts decrypt on several occasions
+	enableLanguageSelect:false,//settings language visibility
+	passwordPrefixLength:8,//random chars before password during storing mechanism
+	alwaysUseSource:true,//use source data whenever possible
+	enforceHeaderSubject:true,//preset subject from parsed source header if any
+	preforceRapidLoad:['compose_editor'],//ids of components/algorithms to preload before using for immediate action
+	enableKeepAlive:true,//keep alive ping based on interval
+	// ----------------------------------
+	// Global Flags
+	// ----------------------------------
+	replyOnTop: true,//marker top/bottom, might not work at bottom at all times (issue with tinymce)
+	htmlEdit: true,//html editting flobal flag
+	htmlFormat:true,//html formatting global flag
+	hideEncryptionBlock: true,//hide main content before result
+	autoMarkRead:true,//marks opening emails as read
+	noBusy:true,//rcmail default busy is disabled
+	noBusyCommands:[],//notused
+	defaultShowContentFrame:false,//disable rc show content frame
+	frameBlankpage:false,//enable/disable blank page
+	linkifyHtml:true,//custom linkification of encrypted emails - pgp and inlines
+	localMailTo:true,//mailto command will be executed in compose command
+	textNodes:['span','div','font','b','i','u','strong','blockquote','li','p','td','tr','th','#text','text'],//respected nodes for linkification
+	permamentDeleteInShow:false,//permanently delete with delete btn in Show view instead of move to trash
+	permanentDeleteInList:false,//permanently delete with delete btn in List view instead of move to trash
+	// ----------------------------------
+	// Images Blocking Secure
+	// ----------------------------------
+	autoSecureEncImgs:true,//enable securing img tags and other media
+	internalSafeMode:false,//marks state for secured content, global flag
+	blockImgUrl:'program/resources/blocked.gif',//url for blocked imgs
+	blockImgCls:'ec-secured-img',//cls for blocked content
+	secureTags:['embed','object','picture','applet','audio','meta','style','source'],//media to secure
+	secureIframes:true,//secure iframes
+	secureScripts:true,//secure script tags
+	secureVideo:true,//secure video tags
+	secureAttributes:true,//secure html attributes before render
+	safeAttributeNames:['id','class','style','src','srcset','href','__src','__srcset','width','height','target','cid'],//safe attribute names, will be allowed in case of no exploit
+	safeProtocols:['http','https','cid'],//allow only the following protocols in href/src/srcset attributes, i.e. javascript: will be disabled
+	// ----------------------------------
+	// Source Data Flags
+	// ----------------------------------
+	source:'',//entire email source
+	sourceindex:0,//start index of email body
+	sourceHeaders:'',//email source headers
+	emailHeaders:[],//email parsed headers
+	sourceBody:'',//source body
+	emailBody:'',//email body
+	emailEncrypted:false,//verification of multipart/encrypted
+	emailProtocol:null,//email protocol in content headers
+	emailContentHeader:null,//global email content header
+	emailContentEncHeader:null,//global email content transfer encoding header
+	requestingSource:false,//marks state of requesting source, global flag
+	waitForSource:false,//marks state for waiting source to arrive, global flag
+	// ----------------------------------
+	// Encrypt Settings
+	// ----------------------------------
+	removePGPComment:true,//remove pgp comments upon encryption result
+	pgpCommentReplace:'This is an encrypted email. To view in EasyCrypt, go to  https://webmail.easycrypt.co/',//change default comment
+	plainHtml:true,//generate plain and html mime parts upon encryption
+	encodeHtml:false,//encode html in nonhtmleditmode for safety during encryption
+	wrapMimeBody:true,//wrap body in mime parts
+	wrapHtmlBody:true,//wrap html body
+	autoEncrypt: true,//encryption status
+	enforceHTMLParams:true,//solves some special isolated cases for html parameters and encryption
+	noBodyEncryption:false,//enable encryption in case of missing body
+	enforceQuotedPrintable:false,//enforce usage of quoted printable decoder
+	encryptInQuotedPrintable:false,//enforce encryption in quoted printable encoding
+	encodeQuotedPrintable:false,//encodes quoted printable
+	encryptProtocols:['multipart/encrypted','application/pgp-encrypted'],//encrypt protocol types
+	enablePublicKeyAttachment:true,//add checkbox in compose to attach pkey
+	allowPublicKeyForEncrypted:true,//allow attaching public key for encrypted users
+	// ----------------------------------
+	// Decrypt Settings
+	// ----------------------------------
+	timeoutDecrypt:false,//decrypt after timeout, global flag
+	decryptTimeout: 200,//timeout to wait before decrypt, in ms
+	noDecrypt:false,//whether or not will decrypt
+	decryptMode:'',//input or html, global flag
+	decryptOptions:null,//not used, additional decrypt args
+	decryptMessageId:'',//display message id during decryption
+	useDefaultNonDecrypt:true,//obtain default rc content - buggy for decryption
+	nonblockingPGP:false,//inline pgp is blocked by displayable text and will not be decrypted
+	decryptAttachmentsOnly:false,//used for nonencrypted emails in input mode
+	fractalDecryption:true,//deep search and decrypt, multi-level decryption, auto-fix mime content
+	stackDecrypt:true,//enable decrypted stacks
+	packDecryptStacks:true,//pack data in decrypted stacks - new lines etc.
+	addDecryptStackHeaders:true,//use decrypt headers on stacks
+	multiCIDAttachmentImages:true,//push content-id parts with img content and detected as attachments to images mime parts too
+	reportProtocols:['multipart/report','message/delivery-status','delivery-status','message/rfc822'],//report protocol types
+	reportProtocolAttributes:['report-type'],//report protocol attributes
+	signProtocols:['multipart/signed','application/pgp-signature'],//pgp signature protocol types
+	decryptStackHeaders:['********* *BEGIN ENCRYPTED or SIGNED PART* *********','********** *END ENCRYPTED or SIGNED PART* **********'],//wrap headers for decrypted blocks
+	// ----------------------------------
+	// Templates
+	// ----------------------------------
+	randomChar:'qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM0987654321',//random characters for generators
+	templates:{
+		'cnt-txt':'Content-Type: text/plain; charset=utf-8',
+		'cnt-html':'Content-Type: text/html; charset=utf-8',
+		'cnt-tr-enc':'Content-Transfer-Encoding: 8bit',
+		'cnt-tr-enc7':'Content-Transfer-Encoding: 7bit',
+		'cnt-tr-enc8':'Content-Transfer-Encoding: 8bit',
+		'cnt-tr-encB':'Content-Transfer-Encoding: binary',
+		'cnt-tr-encQ':'Content-Transfer-Encoding: quoted-printable',
+		'cnt-mix':'Content-Type: multipart/mixed; boundary="%B%"',
+		'cnt-alt':'Content-Type: multipart/alternative; boundary="%B%"',
+	},//some template structures for wrap and encoding
+	pgpPrefix:'-----BEGIN PGP MESSAGE-----',//pgp start header
+	pgpSuffix:'-----END PGP MESSAGE-----',//pgp end header
+	useReplyFormat:true,//use replyFormat
+	replyFormat:'On %YY%-%MM%-%DD% %h%:%m%, %FROM% wrote: ',//reply format template
+	replyFormatNoDate:'%FROM% wrote: ',//reply format template
+	msgFormat:{
+		'loading':rcmail.get_label('ec_plugin.msg_loading'),
+		'encrypt':rcmail.get_label('ec_plugin.msg_encrypt'),
+		'decrypt':rcmail.get_label('ec_plugin.msg_decrypt'),
+		'send':rcmail.get_label('ec_plugin.msg_send'),
+		'decrypted':rcmail.get_label('ec_plugin.msg_decrypted'),
+		'':""
+	},//global msgs
+	// ----------------------------------
+	// Email Settings Format Attachments
+	// ----------------------------------
+	splitInLinesChars:72,//split line after X character
+	readUploadFormat:'binary',//file read settings
+	attachments:[],//attachment array
+	uploadAttachmentNameLength:16,
+	maxBytes:1048576*10,//max size of email
+	attachmentMaxSize:1048576*10,//max size of attachments
+	readUploads:true,//always read file uploads
+	trimAttachmentNames:80,//limit of attachment names
+	enableAttachmentPopup:false,//default attachment popup, global flag
+	autoCloseOnSave:false,//closes upon abort save
+	// ----------------------------------
+	// Mime Parts Settings
+	// ----------------------------------
+	mime:{
+		keepMimeParts:false,
+		keepMimePartsDecrypt:false,
+		keepParts:false,
+		keepLines:false,
+		mimeParts:null,
+		mimePartsDecrypt:null
+	},//mime structure info, used in debug
+	// ----------------------------------
+	// Mime Types Flags
+	// ----------------------------------
+	mimeTypes:['MIME-Version','Version','Comment','Content-Type','Content-Length','Content-Disposition','Content-Description','Content-ID','Content-Transfer-Encoding','Return-Path','Received','To','From','Subject','Message-ID','Date','User-Agent','CC','BCC'],//mandatory header types
+	strictContent:false,//method of obtaining content header
+	contentTypes:['application/octet-stream','multipart/encrypted','application/pgp-encrypted',
+		'multipart/mixed','multipart/alternative','multipart/related',
+		'text/html','text/plain',
+		'application/zip',
+		'image/gif','image/png','image/jpg','image/jpeg','image/bmp','image/tiff','image','image/*'],//major content types for identification as such
+	dispositionTypes:['inline','attachment'],//major disposition types
+	trueContentTypes:['application/octet-stream','text/html','text/plain'],//content types for data/html/text changes during extraction
+	imgContentTypes:['image/gif','image/png','image/jpg','image/jpeg','image/bmp','image/tiff','image','image/*'],//major img types
+	maxMimeHeaderLineChar:1000,//maximum character in a header line, used to block many lines stacking as one header in case of failure
+	// ----------------------------------
+	// Recipients Status Cache Initial Flags
+	// ----------------------------------
+	maxCachedRecipients:100,//number of cached recipients in localstorage
+	autoCacheRecipients:false,//store recipients in localstorage
+	recStatus:-1,//enc status of all recipients during compose
+	recccStatus:-1,//enc status of cc recipients during compose
+	recbccStatus:-1,//enc status of bcc recipients during compose
+	rectoStatus:-1,//enc status of to recipients during compose
+	encryptCC:true,//add cc rec to generated ones
+	encryptBCC:true,//add bcc rec to generated ones
+	encryptFrom:true,//add from rec to generated ones
+	toRecipients:null,//parsed to recipients, usually from email source headers
+	ccRecipients:null,//parsed cc recipients, usually from email source headers
+	bccRecipients:null,//parsed bcc recipients, usually from email source headers
+	fromRecipients:null,//parsed from recipients, usually from email source headers
+	supportNotations:true,//support email names
+	autoRemoveRecipients:true,//removes recipients from dropdown
+	autoRemoveSelfFromRecipients:true,//filter out user email from compose
+	autoConcatAddressbook:false,//use addressbook data to selector dropdown, no ajax addressbook, plain/localstorage only
+	ajaxAddressbook:true,//use dynamic addressbook
+	ajaxAddressbookSize:6,//number of items in dynamic addressbook
+	ajaxAddressbookHideInput:true,//hide input from dropdown options
+	enableDeleteRecipients:true,//select dropdown can delete
+	enableDeleteRecipientsOnOpen:false,//opening select dropdown can delete
+	recipientEditMode:true,//enable edit of recipient tags in compose
+	mixedRecipientMode:false,//mixed recipients popup mode, true - enc/unenc, false - unenc, invite
+	addInviteBtnToMixedRecipientsPopup:false,//adds invite button to mixed recipients dialog, sends directly invite to users 
+	addressbookCollectedId:"collected",//id of collected emails in addressbook, .sourceid
+	strictToRecipients:false,//require to recipients in compose
+	recipientBoxTooltips:true,//add tooltips to recipient tag box
+	removeNonEmailsOnChange:true,//remove no email entries on change event
+	// ----------------------------------
+	// Compose Editor Config
+	// ----------------------------------
+	htmlEditor_undo:true,//enable undo in html editor
+	enableAutosave:true,//enable auto save of drafts
+	requireAutosave:false,//auto save is triggered on manual save (true) or on open (false)
+	intervalAutosave:300,//seconds, interval on automatic trigger of save
+	// ----------------------------------
+	// UI Classes CSS Properties Flags
+	// ----------------------------------
+	unknownEmailCSS:{'background-color': '#dcdcdc','color' : 'black'},//css for unknown emails
+	validEmailCSS:{'background-color': '#24a513','color' : 'white'},//css for valid emails
+	validEmailCLS:'valid-email',//class for valid emails
+	externalEmailCLS:'external-email',//class of external emails
+	invalidEmailCSS:{'background-color': '#ff9951','color' : 'black'},//css for invalid emails
+	enablePriority:false,//priority filters
+	useEncIcon:false,//use encrypt icon in show/preview
+	useEncIconInList:true,//use encrypt icon in list
+	useEncLine:true,//use encrypt status line in show/preview
+	// ----------------------------------
+	// Passphrase
+	// ----------------------------------
+	passphraseTimeout:360 * 60000, //display passphrase popup, passphrase expiration, in ms, 120 Minutes
+	passphraseDialogLogout:60 * 60000, //time before autologout on displayed passphrase popup, in ms, 30 Minutes
+	enablePassphraseDiscard:true,//passphrase can be discarded 
+	localPassphrase:false,//keep passphrase in localstorage
+	verifyPassphraseDialog:true,//enable localstorage syncing for displayed passphrase popups, it will auto close and update
+	decryptErrors:1,//decrypt errors of keys before requiring passphrase
+	clearPassOnLogout:true,//clear passphrase upon logout
+	// ----------------------------------
+	// Ajax Send Compose
+	// ----------------------------------
+	ajaxSend:true,//use ajax for sending emails
+	enableMultiSend:true,//enable sending of encrypted and non-encrypted emails at once
+	allowInvalidEncrypt:true,//flag mark for invalid emails during encryption
+	enforceEncryptSend:false,//hard state, all emails will be sent encrypted
+	enforceNonencryptSend:false,//hard state, all emails will be sent nonencrypted
+	enforceAjaxSend:true,//always use ajax during sending
+	enforceDraftEncrypt:true,//encrypt drafts
+	allowCustomCompose:true,//allow custom compose components
+	customComposeNewOnly:false,//custom compose in new messages only
+	maxCustomCompose:3,//max number of custom compose windows
+	replySubjectPrefix:'Re: ',//prefix string for subject in reply/reply-all mode
+	forwardSubjectPrefix:'Fwd: ',//prefix string for subject in forward mode
+	customComposeDelay:200,//ms, hide on open and will show in delay
+	enforceGlobalMailService:true,//use global methods for send/encrypt/decrypt/submit in supported custom components
+	composeMaximizedStart:false,//start compose view in max mode
+	// ----------------------------------
+	// Local Queue
+	// ----------------------------------
+	localQueue:true,//use localstorage queue
+	autoResumeQueue:true,//resume queue automatically after resolved errors 
+	queueTimeout:100,//timeout between queue executions, in ms
+	queueSendTimeout:2.5 * 60000, //timeout for failing queue, in ms, 2.5 Minutes
+	queueMaxFail:3,//max fail retries for queue
+	queueDrafts:true,//enable draft queue functionality, drafts will not be queued actually
+	queueDialog:true,//enable queue dialog
+	maxFailGoodService:2, //statistics for failed queue attempts
+	customid:'COMPOSE_ID_ZXC',//exchange of id in constructing url data
+	customtoken:'REQUEST_TOKEN_ZXC',//exchange of token in constructing url data
+	placeOutboxAfter:"",//"Sent",
+	placeOutboxFunction:"after",//jquery function to use for placing outbox
+	maxQueueSize:1048576*0.5,// 512KB Email Queue Size
+	// ----------------------------------
+	// Session
+	// ----------------------------------
+	sessionKeepAlive:3*1000,//localstorage sessions, in ms, 3 s
+	updateSessionInterval:666,//interval for updating localstorage sessions, in ms
+	sessionData:{},//window session data to be stored in localstorage
+	startUpCheckEncDec:false,//check encrypt/decrypt functionality upon startup
+	clearSessionsOnLogout:true,//clear local storage sessions on logout, double check
+	// ----------------------------------
+	// Notifications
+	// ----------------------------------
+	disableFlashTitle:true,//native window title flashing
+	notifySendingQueue:false,//notify for sending a queue email
+	notifySentQueue:false,//notify for sent queue
+	notifyAddingQueue:false,//notify for adding new queue
+	// ----------------------------------
+	// Email cache
+	// ----------------------------------
+	emailCache:true,//enable email cache
+	emailCacheLimit:20,//limit of cached emails
+	emailCacheSizePerItem:1048576*0.125,// 128KB Email Cache Size per each
+	emailCacheSizeZero:-1,//used for not caching emails with greater size of 0
+	emailCachePurge:true,//enable purging of cache on variety of cases
+	autoFetchToCache:true,//auto fetch emails from backend to localstorage cache
+	autoFetchNonencrypted:true,//auto fetch nonencrypted, will not be cached, just requested
+	autoFetchLimit:0,//limit auto fetch emails, otherwise emailCacheLimit
+	autoFetchUpdate:true,//update fetch data if it exists
+	fetchTimeout:250,//timeout between next fetch request, in ms
+	emailUnencryptCache:true,//nonencrypted cache status
+	// ----------------------------------
+	// Memory cache - @not_implemented
+	// ----------------------------------
+	memoryCache:true,
+	memoryCacheSize:1048576*5,
+	memoryCacheLimit:10,
+	memoryCacheSizePerItem:524288,
+	// ----------------------------------
+	// Key cache
+	// ----------------------------------
+	keyCache:true,//enable key cache
+	keyCacheLimit:100,//limit of cached keys
+	keyCacheStatus:true,//cache status of keys
+	keyCacheEnc:true,//encrypt cached keys, @not_implemented
+	keyCacheExpiration:5 * 60000,//expiration of cached keys, in ms, 5 M
+	clearKeysOnLogout:true,//clear cached keys on logout
+	// ----------------------------------
+	// List cache
+	// ----------------------------------
+	listCache:true,//enable caching of list data
+	cacheMessageList:true,//cache message list
+	listCacheLimit:100,//limit list cache
+	fitListCacheLimitToPageSize:true,//update listCacheLimit with rcmail.env.pagesize
+	listCacheSizePerItem:1048576*0.005,// 5KB List Cache Size per each, usually ~250-300B
+	listCachePurge:true,//enable purging cached lists
+	listSelect:true,//auto select from list
+	cacheListSelect:false,//auto select during cache procedures
+	keepPreview:true,//unknown, @not_implemented
+	// ----------------------------------
+	// Events
+	// ----------------------------------
+	events:{
+		
+	},//use custom rcmail events, @not_implemented
+	// ----------------------------------
+	// Messages
+	// ----------------------------------
+	disabledMessages:{
+		savingmessage:1,
+		movingmessage:1,
+		nomessagesfound:1,
+		messagemoved:1,
+		No_messages_found_in_this_mailbox:1,
+		No_messages_found_in_this_mailbox_:1,
+		"ec_plugin.No_messages_found_in_this_mailbox_":1
+	},//disable these message ids
+	disabledMessageString:"$DISABLED_MESSAGE$",//change disabled msg to this id
+	hookMessages:{
+		
+	},//listeners for message ids
+	// ----------------------------------
+	// Taskbar
+	// ----------------------------------
+	enableTaskbarEmail:true,//email in taskbar
+	enableTaskbarInvite:true,//invite btn in taskbar
+	enableEmailInvite:true,//invite btns next to each email
+	enableTaskbarSettings:true,//settings in taskbar
+	enableDateInvite:false,//global btn for inviting all emails
+	enableSettingsSettings:true,//settings btn in settings dropdown
+	enableSettingsHelp:false,//help btn in settings dropdown
+	enableSettingsAccount:true,//account btn in settings dropdown
+	enableSettingsLogout:true,//logout btn in settings dropdown
+	enableSettingsFeedback:true,//feedback btn in settings dropdown
+	enableTaskbarHelp:true,//help btn in taskbar, no dropdown
+	enableHelpDropdown:false,//help dropdown
+	enableHelpFAQ:true,//faq in help dropdown
+	enableHelpFAQ2:true,//faq beta in help dropdown
+	// ----------------------------------
+	// Folders
+	// ----------------------------------
+	disableDrag:false,//enable/disable dragging, global flag
+	disableFolderDrag:[],//additional folders forbidden
+	// ----------------------------------
+	// Feedback
+	// ----------------------------------
+	feedbackSupport:'support@easycrypt.co',//feedback support email
+	enableFeedback:false,//enable feedback button on top	
+	// ----------------------------------
+	// URLs
+	// ----------------------------------
+	ecDomain: '.stage.easycrypt.co',
+	ecCookieName: 'ec_jwt',
+	ecAccountService: 'https://account.stage.easycrypt.co',
+	//@new props
+	
+	//@new props
+	
+	//@new props
+	
+	//@end props
+	__add_properties_above_this_one:true
+};
+
+//mobile
+if (isMobileCFG()){
+	ECClientCFG.maxBytes=Math.round(ECClientCFG.maxBytes/2);
+	ECClientCFG.emailCacheLimit=Math.round(ECClientCFG.emailCacheLimit/2);
+	ECClientCFG.autoFetchToCache=false;
+	ECClientCFG.localQueue=false;
+	ECClientCFG.autoResumeQueue=false;
+	ECClientCFG.autoFetchNonencrypted=false;
+	ECClientCFG.autoFetchUpdate=false;
+	ECClientCFG.emailUnencryptCache=false;
+	ECClientCFG.queueDialog=false;
+	ECClientCFG.maxQueueSize=Math.round(ECClientCFG.maxQueueSize/2);
+	ECClientCFG.attachmentMaxSize=Math.round(ECClientCFG.attachmentMaxSize/2);
+}
+
+var ECClientCFGObjInstance=new ECClientCFGObj({cfg:ECClientCFG});

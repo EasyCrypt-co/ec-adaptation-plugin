@@ -1,0 +1,91 @@
+<form name="form" method="post" id="compose-content" class="uibox" action="./?_task=mail" style="overflow: auto;">
+<input type="hidden" name="_token" value=""><input type="hidden" name="_extwin" value="1">
+
+<div id="composeheaders" role="region" aria-labelledby="aria-label-composeheaders">
+<h2 id="aria-label-composeheaders" class="voice">Message headers</h2>
+
+<a href="#options" id="composeoptionstoggle" class="moreheaderstoggle remove" title="Toggle composition options" aria-expanded="true" style="cursor: pointer; pointer-events: none;"><span class="iconlink"></span></a>
+
+<table class="headers-table compose-headers">
+<tbody>
+	<tr>
+		<td class="title"><label for="_from">From</label></td>
+		<td class="editfield">
+			<input type="hidden" name="_task" value="mail"><input type="hidden" name="_action" value="send"><input type="hidden" name="_id" value="114770758658f8fd5f743bc"><input type="hidden" name="_attachments"><select name="_from" id="_from" tabindex="1" onchange="rcmail.change_identity(this)">
+<option value="4" selected="selected">Local Roundcube &lt;local.roundcube@gmail.com&gt;</option>
+</select><div id="composeoptions" role="region" aria-labelledby="aria-label-composeoptions" style="display: block;" class="ec-composeoptions">
+	<h2 id="aria-label-composeoptions" class="voice">Composition options</h2>
+		<span class="composeoption" style="display: none;">
+		<label>Editor type
+			<select name="editorSelector" tabindex="4" onchange="return rcmail.command('toggle-editor', {id: 'composebody', html: this.value == 'html'}, '', event)">
+<option value="html" selected="selected">HTML</option>
+<option value="plain">Plain text</option>
+</select>
+</label>
+	</span>
+		
+		<span class="composeoption" style="display: none;">
+		<label><input name="_mdn" id="rcmcomposereceipt" tabindex="4" value="1" type="checkbox"> Return receipt</label>
+	</span>
+			<span class="composeoption" style="display: none;">
+		<label><input name="_dsn" id="rcmcomposedsn" tabindex="4" value="1" type="checkbox"> Delivery status notification</label>
+	</span>
+			
+<span class="composeoption composeoption-encrypt"><label class="nopointercheckbox"><input name="_ec_enc" id="ec_rcmcomposeenc" tabindex="4" checked="1" value="1" type="checkbox"> Encrypt</label><font id="_ec_enc_status"></font></span><span class="composeoption composeoption-addpkey" style="display: none;"><label for="ec_addpkey"><input name="_ec_addpkey" id="ec_addpkey" tabindex="4" value="0" type="checkbox"> Attach public key (Optional)</label></span><span class="composeoption composeoption-html"><input name="_ec_ishtml" id="ec_rcmcomposehtml" tabindex="4" value="" type="hidden"></span><span class="composeoption composeoption-_ec_forward_uid"><input name="_ec_forward_uid" id="_ec_forward_uid" tabindex="4" value="" type="hidden"></span><span class="composeoption composeoption-_ec_reply_uid"><input name="_ec_reply_uid" id="_ec_reply_uid" tabindex="4" value="" type="hidden"></span><span class="composeoption composeoption-_ec_mbox"><input name="_ec_mbox" id="_ec_mbox" tabindex="4" value="" type="hidden"></span><span class="composeoption composeoption-_ec_type"><input name="_ec_type" id="ec_type" tabindex="4" value="" type="hidden"></span><span class="composeoption composeoption-boundary"><input name="_ec_boundary" id="ec_rcmcomposeboundary" tabindex="4" value="" type="hidden"></span></div>
+
+			<a href="#identities" onclick="return rcmail.command('identities')" class="iconlink edit" tabindex="0" style="display: none;">Edit identities</a>
+		</td>
+	</tr><tr>
+		<td class="title top"><label for="_to">To</label></td>
+		<td class="editfield"><textarea name="_to" spellcheck="false" id="_to" cols="70" rows="1" tabindex="1" style="height: 14px; display: none;" autocomplete="off" aria-autocomplete="list" aria-expanded="false" role="combobox"></textarea><select id="user_emails" multiple="" class="toSelector select2-hidden-accessible" style="width: 100%" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default toSelector select2-container--focus" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1"><ul class="select2-selection__rendered"><li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" placeholder="" style="width: 0.75em;"></li></ul></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></td>
+	</tr><tr id="compose-cc">
+		<td class="title top">
+			<label for="_cc">Cc</label>
+			<a href="#cc" onclick="return UI.hide_header_row('cc');" class="iconbutton cancel" title="Delete" tabindex="3"></a>
+		</td>
+		<td class="editfield"><textarea name="_cc" spellcheck="false" id="_cc" cols="70" rows="1" tabindex="1" autocomplete="off" aria-autocomplete="list" aria-expanded="false" role="combobox" style="height: 14px; display: none;"></textarea><select id="cc_emails" multiple="" class="ccSelector select2-hidden-accessible" style="width: 100%" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default ccSelector" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1"><ul class="select2-selection__rendered"><li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" placeholder="" style="width: 0.75em;"></li></ul></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></td>
+	</tr><tr id="compose-bcc">
+		<td class="title top">
+			<label for="_bcc">Bcc</label>
+			<a href="#bcc" onclick="return UI.hide_header_row('bcc');" class="iconbutton cancel" title="Delete" tabindex="3"></a>
+		</td>
+		<td class="editfield"><textarea name="_bcc" spellcheck="false" id="_bcc" cols="70" rows="1" tabindex="1" autocomplete="off" aria-autocomplete="list" aria-expanded="false" role="combobox" style="height: 14px; display: none;"></textarea><select id="bcc_emails" multiple="" class="bccSelector select2-hidden-accessible" style="width: 100%" tabindex="-1" aria-hidden="true"></select><span class="select2 select2-container select2-container--default bccSelector" dir="ltr" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--multiple" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="-1"><ul class="select2-selection__rendered"><li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" placeholder="" style="width: 0.75em;"></li></ul></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span></td>
+	</tr><tr>
+		<td></td>
+		<td class="formlinks">
+			<a href="#cc" onclick="return UI.show_header_row('cc')" id="cc-link" class="iconlink add" tabindex="3">Add Cc</a>
+			<a href="#bcc" onclick="return UI.show_header_row('bcc')" id="bcc-link" class="iconlink add" tabindex="3">Add Bcc</a>
+			
+			
+		</td>
+	</tr><tr>
+		<td class="title"><label for="compose-subject">Subject</label></td>
+		<td class="editfield"><input name="_subject" id="compose-subject" tabindex="1" spellcheck="true" value="" type="text"></td>
+	</tr>
+</tbody>
+</table>
+
+<div id="composebuttons" class="formbuttons">
+	
+</div>
+<div id="compose-attachments" class="rightcol droptarget" role="region" aria-labelledby="aria-label-composeattachments" style="display: block;">
+	<h2 id="aria-label-composeattachments" class="voice">Attachments</h2>
+	<div style="text-align:center; margin-bottom:20px">
+		<input type="button" class="button" onclick="UI.show_uploadform(event);return false" tabindex="1" id="rcmbtn108" value="Attach file">
+	</div>
+	<ul id="attachment-list" class="attachmentslist" data-tabindex="1">
+</ul>
+</div>
+
+</div>
+
+<div id="composeview-bottom" style="height: 300px;">
+	<div id="composebodycontainer">
+		<label for="composebody" class="voice">Message Body</label>
+		<input type="hidden" name="_draft_saveid"><input type="hidden" name="_draft" value="yes"><input type="hidden" name="_is_html" value="1"><input type="hidden" name="_framed" value="1"><div id="mceu_21" class="mce-tinymce mce-container mce-panel" hidefocus="1" tabindex="-1" role="application" style="visibility: hidden; border-width: 1px; width: 1116px;"><div id="mceu_21-body" class="mce-container-body mce-stack-layout"><div id="mceu_22" class="mce-toolbar-grp mce-container mce-panel mce-stack-layout-item mce-first" hidefocus="1" tabindex="-1" role="group"><div id="mceu_22-body" class="mce-container-body mce-stack-layout"><div id="mceu_23" class="mce-container mce-toolbar mce-stack-layout-item mce-first mce-last" role="toolbar"><div id="mceu_23-body" class="mce-container-body mce-flow-layout"><div id="mceu_24" class="mce-container mce-flow-layout-item mce-first mce-btn-group" role="group"><div id="mceu_24-body"><div id="mceu_0" class="mce-widget mce-btn mce-btn-small mce-first" tabindex="-1" aria-labelledby="mceu_0" role="button" aria-label="Bold"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-bold"></i></button></div><div id="mceu_1" class="mce-widget mce-btn mce-btn-small" tabindex="-1" aria-labelledby="mceu_1" role="button" aria-label="Italic"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-italic"></i></button></div><div id="mceu_2" class="mce-widget mce-btn mce-btn-small mce-last" tabindex="-1" aria-labelledby="mceu_2" role="button" aria-label="Underline"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-underline"></i></button></div></div></div><div id="mceu_25" class="mce-container mce-flow-layout-item mce-btn-group" role="group"><div id="mceu_25-body"><div id="mceu_3" class="mce-widget mce-btn mce-btn-small mce-first" tabindex="-1" aria-labelledby="mceu_3" role="button" aria-label="Align left"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-alignleft"></i></button></div><div id="mceu_4" class="mce-widget mce-btn mce-btn-small" tabindex="-1" aria-labelledby="mceu_4" role="button" aria-label="Align center"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-aligncenter"></i></button></div><div id="mceu_5" class="mce-widget mce-btn mce-btn-small" tabindex="-1" aria-labelledby="mceu_5" role="button" aria-label="Align right"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-alignright"></i></button></div><div id="mceu_6" class="mce-widget mce-btn mce-btn-small mce-last" tabindex="-1" aria-labelledby="mceu_6" role="button" aria-label="Justify"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-alignjustify"></i></button></div></div></div><div id="mceu_26" class="mce-container mce-flow-layout-item mce-btn-group" role="group"><div id="mceu_26-body"><div id="mceu_7" class="mce-widget mce-btn mce-btn-small mce-first" tabindex="-1" aria-labelledby="mceu_7" role="button" aria-label="Decrease indent"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-outdent"></i></button></div><div id="mceu_8" class="mce-widget mce-btn mce-btn-small" tabindex="-1" aria-labelledby="mceu_8" role="button" aria-label="Increase indent"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-indent"></i></button></div><div id="mceu_9" class="mce-widget mce-btn mce-btn-small" tabindex="-1" aria-labelledby="mceu_9" role="button" aria-label="Left to right"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-ltr"></i></button></div><div id="mceu_10" class="mce-widget mce-btn mce-btn-small" tabindex="-1" aria-labelledby="mceu_10" role="button" aria-label="Right to left"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-rtl"></i></button></div><div id="mceu_11" class="mce-widget mce-btn mce-btn-small mce-last" tabindex="-1" aria-labelledby="mceu_11" role="button" aria-label="Blockquote"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-blockquote"></i></button></div></div></div><div id="mceu_27" class="mce-container mce-flow-layout-item mce-btn-group" role="group"><div id="mceu_27-body"><div id="mceu_12" class="mce-widget mce-btn mce-btn-small mce-colorbutton mce-first" role="button" tabindex="-1" aria-haspopup="true" aria-label="Text color"><button role="presentation" hidefocus="1" type="button" tabindex="-1"><i class="mce-ico mce-i-forecolor"></i><span id="mceu_12-preview" class="mce-preview"></span></button><button type="button" class="mce-open" hidefocus="1" tabindex="-1"> <i class="mce-caret"></i></button></div><div id="mceu_13" class="mce-widget mce-btn mce-btn-small mce-colorbutton mce-last" role="button" tabindex="-1" aria-haspopup="true" aria-label="Background color"><button role="presentation" hidefocus="1" type="button" tabindex="-1"><i class="mce-ico mce-i-backcolor"></i><span id="mceu_13-preview" class="mce-preview"></span></button><button type="button" class="mce-open" hidefocus="1" tabindex="-1"> <i class="mce-caret"></i></button></div></div></div><div id="mceu_28" class="mce-container mce-flow-layout-item mce-btn-group" role="group"><div id="mceu_28-body"><div id="mceu_14" class="mce-widget mce-btn mce-btn-small mce-menubtn mce-fixed-width mce-listbox mce-first mce-btn-has-text" tabindex="-1" aria-labelledby="mceu_14" role="button" aria-label="Font Family" aria-haspopup="true"><button id="mceu_14-open" role="presentation" type="button" tabindex="-1"><span class="mce-txt">Verdana</span> <i class="mce-caret"></i></button></div><div id="mceu_15" class="mce-widget mce-btn mce-btn-small mce-menubtn mce-fixed-width mce-listbox mce-last mce-btn-has-text" tabindex="-1" aria-labelledby="mceu_15" role="button" aria-label="Font Sizes" aria-haspopup="true"><button id="mceu_15-open" role="presentation" type="button" tabindex="-1"><span class="mce-txt">10pt</span> <i class="mce-caret"></i></button></div></div></div><div id="mceu_29" class="mce-container mce-flow-layout-item mce-btn-group" role="group"><div id="mceu_29-body"><div id="mceu_16" class="mce-widget mce-btn mce-btn-small mce-first" tabindex="-1" aria-labelledby="mceu_16" role="button" aria-label="Insert/edit link"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-link"></i></button></div><div id="mceu_17" class="mce-widget mce-btn mce-btn-small" tabindex="-1" aria-labelledby="mceu_17" role="button" aria-label="Remove link"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-unlink"></i></button></div><div id="mceu_18" class="mce-widget mce-btn mce-btn-small mce-menubtn mce-last" tabindex="-1" aria-labelledby="mceu_18" role="button" aria-label="Table" aria-haspopup="true"><button id="mceu_18-open" role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-table"></i> <i class="mce-caret"></i></button></div></div></div><div id="mceu_30" class="mce-container mce-flow-layout-item mce-last mce-btn-group" role="group"><div id="mceu_30-body"><div id="mceu_19" class="mce-widget mce-btn mce-btn-small mce-first mce-disabled" tabindex="-1" aria-labelledby="mceu_19" role="button" aria-label="Undo" aria-disabled="true"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-undo"></i></button></div><div id="mceu_20" class="mce-widget mce-btn mce-btn-small mce-last mce-disabled" tabindex="-1" aria-labelledby="mceu_20" role="button" aria-label="Redo" aria-disabled="true"><button role="presentation" type="button" tabindex="-1"><i class="mce-ico mce-i-redo"></i></button></div></div></div></div></div></div></div><div id="mceu_31" class="mce-edit-area mce-container mce-panel mce-stack-layout-item mce-last" hidefocus="1" tabindex="-1" role="group" style="border-width: 1px 0px 0px;"><iframe id="composebody_ifr" frameborder="0" allowtransparency="true" title="Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help" src='javascript:""' style="width: 100%; height: 270px; display: block;" tabindex="1"></iframe></div></div></div><textarea name="_message" id="composebody" cols="70" rows="20" tabindex="1" class="mce_editor visible" style="width: 1108px; height: 292px; display: none;" aria-hidden="true"></textarea>
+<iframe name="savetarget" src="program/resources/blank.gif" style="width:0;height:0;border:none;visibility:hidden;" aria-hidden="true"></iframe>
+	</div>
+
+</div>
+
+</form>
